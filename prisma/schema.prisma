@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String
+  products Product[]
+
+  @@map("categories")
+}
+
+model Color {
+  id       Int       @id @default(autoincrement())
+  name     String
+  products Product[]
+
+  @@map("colors")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Decimal
+  image       String
+  discount    Decimal?
+  rating      Decimal?
+  description String
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  colorId     Int      @map("color_id")
+  categoryId  Int      @map("category_id")
+  sizeId      Int      @map("size_id")
+  highlight   Boolean
+  ean         String   @unique
+  categories  Category @relation(fields: [categoryId], references: [id], map: "fk_categories")
+  colors      Color    @relation(fields: [colorId], references: [id], map: "fk_colors")
+  sizes       Size     @relation(fields: [sizeId], references: [id], map: "fk_sizes")
+  stocks      Stock[]
+
+  @@map("products")
+}
+
+model Size {
+  id       Int       @id @default(autoincrement())
+  name     String
+  products Product[]
+
+  @@map("sizes")
+}
+
+model Stock {
+  id            Int      @id @default(autoincrement())
+  productId     Int      @map("product_id")
+  status        String
+  purchasePrice Decimal  @map("purchase_price")
+  expiryPate    DateTime @map("expiry_date")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  quantity      Int
+  products      Product  @relation(fields: [productId], references: [id], map: "fk_products")
+
+  @@map("stocks")
+}
+
+model User {
+  id           Int    @id @default(autoincrement())
+  email        String @unique
+  firstName    String @map("first_name")
+  lastName     String @map("last_name")
+  passwordHash String @map("password_hash")
+
+  @@map("users")
+}

@@ -1,0 +1,50 @@
+-- DropForeignKey
+ALTER TABLE "products" DROP CONSTRAINT "fk_categories";
+
+-- DropForeignKey
+ALTER TABLE "products" DROP CONSTRAINT "fk_colors";
+
+-- DropForeignKey
+ALTER TABLE "products" DROP CONSTRAINT "fk_sizes";
+
+-- DropForeignKey
+ALTER TABLE "stocks" DROP CONSTRAINT "fk_products";
+
+-- AlterTable
+ALTER TABLE "categories" ALTER COLUMN "name" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "colors" ALTER COLUMN "name" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "products" ALTER COLUMN "name" SET DATA TYPE TEXT,
+ALTER COLUMN "price" SET DATA TYPE DECIMAL(65,30),
+ALTER COLUMN "discount" SET DATA TYPE DECIMAL(65,30),
+ALTER COLUMN "rating" SET DATA TYPE DECIMAL(65,30),
+ALTER COLUMN "created_at" SET DEFAULT CURRENT_TIMESTAMP,
+ALTER COLUMN "created_at" SET DATA TYPE TIMESTAMP(3),
+ALTER COLUMN "updated_at" SET DATA TYPE TIMESTAMP(3),
+ALTER COLUMN "ean" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "sizes" ALTER COLUMN "name" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "stocks" ALTER COLUMN "status" SET DATA TYPE TEXT,
+ALTER COLUMN "purchase_price" SET DATA TYPE DECIMAL(65,30),
+ALTER COLUMN "expiry_date" SET DATA TYPE TIMESTAMP(3),
+ALTER COLUMN "created_at" SET DEFAULT CURRENT_TIMESTAMP,
+ALTER COLUMN "created_at" SET DATA TYPE TIMESTAMP(3),
+ALTER COLUMN "updated_at" SET DATA TYPE TIMESTAMP(3);
+
+-- AddForeignKey
+ALTER TABLE "products" ADD CONSTRAINT "fk_categories" FOREIGN KEY ("category_id") REFERENCES "categories"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "products" ADD CONSTRAINT "fk_colors" FOREIGN KEY ("color_id") REFERENCES "colors"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "products" ADD CONSTRAINT "fk_sizes" FOREIGN KEY ("size_id") REFERENCES "sizes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "stocks" ADD CONSTRAINT "fk_products" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

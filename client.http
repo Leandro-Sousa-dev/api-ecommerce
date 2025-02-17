@@ -1,0 +1,34 @@
+POST http://localhost:3333/users
+Content-Type: application/json
+
+{
+    "email": "teste1@gmail.com",
+    "firstName": "José",
+    "lastName": "Leandro",
+    "password": "123456"
+}
+
+###
+
+POST http://localhost:3333/users/login
+Content-Type: application/json
+
+{
+    "email": "teste1@gmail.com",
+    "password": "123456"
+}
+
+###
+
+GET http://localhost:3333/users
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ0ZXN0ZTFAZ21haWwuY29tIiwiaWF0IjoxNzM4ODA0MzU3LCJleHAiOjE3Mzg4MDc5NTd9.5pjP8dgR4XUWQtV27Ils-e8t45Y28U8ijathV_JOjNU
+
+{
+    "email": "teste@gmail.com",
+    "firstName": "José",
+    "lastName": "Leandro",
+    "password": "123456"
+}
+
+
