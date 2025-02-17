@@ -4,79 +4,99 @@ import { Request, Response } from 'express'
 // MVC - MODEL / VIEW / CONTROLLER
 
 export class ProductsController {
-  async findAll(_request: Request, response: Response) {
-    const products = await prisma.product.findMany()
-    response.send(products)
-  }
-
-  async create(request: Request, response: Response) {
-      const { name, price, discount, description, color_id,category_id, size_id, highlight, ean  } = request.body
-      const image = request.file.filename!
-
-    try {
-        const productExistentInDatabase = await prisma.product.findUnique({
-            where: {
-                ean
-            }
-        })
-    
-        if (productExistentInDatabase) return response.status(409).send({ message: '❌ Produto já cadastrado no sistema.' })
-    
-        const product = await prisma.product.create({
-            data: {
-                name,
-                image,
-                price,
-                discount,
-                description,
-                color_id,
-                category_id,
-                size_id,
-                highlight,
-                ean
-            }
-        })
-    
-        return response.status(201).send(product)
-    } catch (error) {
-        return response.status(500).send(error)
+    async findAll(_request: Request, response: Response) {
+        const products = await prisma.product.findMany()
+        response.send(products)
     }
-  }
 
-  async update(request: Request, response: Response) {
-    const id = Number(request.params.id)
-    const { name, price, discount, description, color_id, updated_at, category_id, size_id, highlight, ean  } = request.body
+    async create(request: Request, response: Response) {
+        const data = { ...request.body }
+        //   const image = request.file.filename!
 
-    const productExistentInDatabase = await prisma.product.findUnique({
-        where: {
-            id
+        try {
+            const productExistentInDatabase = await prisma.product.findUnique({
+                where: {
+                    ean: data.ean
+                }
+            })
+
+            if (productExistentInDatabase) {
+                response.status(409).send({ message: '❌ Produto já cadastrado no sistema.' })
+                return
+            }
+
+            await prisma.product.create({
+                data
+            })
+
+            response.status(201).send({ message: `Produto ${[name]} cadastrado com sucessso!` })
+            return
+        } catch (error) {
+            response.status(500).send(error)
+            return
         }
-    })
+    }
 
-    if (!productExistentInDatabase) return response.status(409).send({ message: '❌ Produto não encontrado no sistema.'})
+    async update(request: Request, response: Response) {
+        const id = Number(request.params.id)
 
-    await prisma.product.update({
-        where: {
-            id
-        },
-        data: {
-            name,
-            price,
+        try {
+
+            const productExistentInDatabase = await prisma.product.findUnique({
+                where: {
+                    id
+                }
+            })
+
+            if (!productExistentInDatabase) {
+                response.status(409).send({ message: '❌ Produto não encontrado no sistema.' })
+                return
+            }
+            const data = { ...request.body }
+            data.updated_at = new Date()
+
+            await prisma.product.update({
+                where: {
+                    id
+                },
+                data
+            })
+            response.status(200).send({ message: 'Produto atualizado.' })
+            return
+        } catch (error) {
+            response.status(500).send(error)
+            return
         }
-    })
 
-    response.status(200).send({ message: 'Produto atualizado.' })
-  }
+    }
 
-  async destroy(request: Request, response: Response) {
-    const id = Number(request.params.id)
+    async destroy(request: Request, response: Response) {
+        const id = Number(request.params.id)
 
-    await prisma.product.delete({
-        where: {
-            id
+
+        try {
+
+            const product = await prisma.product.findUnique({
+                where: {
+                    id
+                }
+            })
+
+            if (!product) {
+                response.status(404).send({ message: 'Produto não encontrado!' })
+                return
+            }
+
+            await prisma.product.delete({
+                where: {
+                    id
+                }
+            })
+            response.status(200).send({ message: 'Produto deletado com sucesso!' })
+            return
+        } catch (error) {
+            response.status(500).send(error)
+            return
         }
-    })
-
-    response.status(200).send({ message: 'Produto deletado com sucesso.' })
-  }
+    }
 }

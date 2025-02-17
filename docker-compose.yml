@@ -1,14 +1,14 @@
 version: '3.8'
 
 services:
-  devemdobro:
+  ecommerce:
     image: postgres:15
-    container_name: devemdobro
+    container_name: ecommerce
     restart: always
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: devemdobro-db
+      POSTGRES_PASSWORD: 0000
+      POSTGRES_DB: ecommerce-db
     ports:
       - "5432:5432"
     volumes:
