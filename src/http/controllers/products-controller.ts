@@ -41,7 +41,7 @@ export class ProductsController {
             response.status(201).send({ message: `Produto cadastrado com sucessso!` })
             return
         } catch (error) {
-            response.status(500).send(`eeee ${error}`)
+            response.status(500).send({ message: `${error}` })
             return
         }
     }

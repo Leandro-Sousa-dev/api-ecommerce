@@ -13,6 +13,6 @@ app.listen(port, () => {
 
 app.use('/products', productsRoutes)
 app.use('/users', usersRoutes)
-app.use('/admin/colors', colorsRoutes)
-app.use('/admin/sizes', sizesRoutes)
-app.use('/admin/categories', categoriesRoutes)
+app.use('/colors', colorsRoutes)
+app.use('/sizes', sizesRoutes)
+app.use('/categories', categoriesRoutes)
