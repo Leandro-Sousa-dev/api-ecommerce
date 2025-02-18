@@ -11,7 +11,6 @@ export class ProductsController {
 
     async create(request: Request, response: Response) {
         const data = { ...request.body }
-        //   const image = request.file.filename!
 
         try {
             const productExistentInDatabase = await prisma.product.findUnique({
@@ -25,14 +24,24 @@ export class ProductsController {
                 return
             }
 
+            const image = request.file?.filename
+
+            data.image = image
+
             await prisma.product.create({
-                data
+                data: {
+                    ...data,
+                    colorId: parseInt(data.colorId),
+                    categoryId: parseInt(data.categoryId),
+                    sizeId: parseInt(data.sizeId),
+                    highlight: data.highlight === "true"
+                }
             })
 
-            response.status(201).send({ message: `Produto ${[name]} cadastrado com sucessso!` })
+            response.status(201).send({ message: `Produto cadastrado com sucessso!` })
             return
         } catch (error) {
-            response.status(500).send(error)
+            response.status(500).send(`eeee ${error}`)
             return
         }
     }
@@ -72,7 +81,6 @@ export class ProductsController {
 
     async destroy(request: Request, response: Response) {
         const id = Number(request.params.id)
-
 
         try {
 
