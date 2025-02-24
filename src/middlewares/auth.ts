@@ -34,7 +34,9 @@ export const authMiddleware = async (
         return
     }
 
-    request.user = user
+    const {passwordHash, ...loggedUser} = user
+
+    request.user = loggedUser
 
     next()
 }
